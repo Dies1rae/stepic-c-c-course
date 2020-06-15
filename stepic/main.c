@@ -78,9 +78,8 @@ void get_properties(int* array, int* min, int* max, int* num) {
     *min = MIN;
 }
 
-
+/*
 int main() {
-    /*
     int n;
     scanf("%d", &n);
     struct list l = make_list();
@@ -90,7 +89,7 @@ int main() {
     }
     printf("%d\n", l.size);
     display(l);
-    */
+    
     int mas[1000];
     int *min = 0, *max = 0, *num = 0, ptr, i = 0;
     scanf("%d", &ptr);
@@ -104,3 +103,4 @@ int main() {
     printf("min:%d, max:%d, num:%d", min, max, num);
     return 0;
 }
+*/
