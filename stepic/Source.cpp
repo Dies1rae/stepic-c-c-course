@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 #pragma warning(disable : 4996)
 using namespace std;
 /*
@@ -54,11 +56,16 @@ Point2D::Point2D(const Point2D& p) {
 }
 */
 
+//---------------
 
 class str {
 private:
     char* S;
 public:
+    static int countInstances() {
+        static int ctr = 0;
+        return ctr++;
+    }
     str();
     str(const char*);
     str(const str& s);
@@ -72,9 +79,11 @@ public:
     str& set(const char* msg);
 };
 str::str() {
+    countInstances();
     this->S = nullptr;
 }
 str::str(const char* msg) {
+    countInstances();
     this->S = new char[strlen(msg)+1];
     for (int i = 0; i < strlen(msg); i++) {
         this->S[i] = msg[i];
@@ -82,6 +91,7 @@ str::str(const char* msg) {
     this->S[strlen(msg)] = '\0';
 }
 str::str(const str& s) {
+    countInstances();
     if (s.S == nullptr) {
         this->S = nullptr;
         return;
@@ -95,6 +105,7 @@ str::str(const str& s) {
 str::~str() {
     delete this->S;
 }
+
 
 char* str::rep() {
     return this->S;
@@ -156,6 +167,8 @@ void f(str s) { // copy constructor gets called
 
     Assert(0 == strcmp("This is my string", s2.rep()), "Copy constructor should make a copy of the content.");
 } //end of function, both copies get destroyed
+//------------------------------------
+
 
 /*
 void test1() {
@@ -307,8 +320,12 @@ void testChainedSet() {
 }
 
 
+void testCounter() {
 
+    str s1 = "This is test", s2, s3 = s1;
+    Assert(3 == str::countInstances(), "Number of instances mismatch.");
 
+}
 int main() {
 /*
     string str;
@@ -340,6 +357,7 @@ int main() {
     test4();
     test5();
     */
+/*
     testDefaultCtorShouldInitializeWithNull();
     testCtorShouldAllocateOwnMemory();
     testCopyCtorShouldNotAlterSource();
@@ -352,6 +370,15 @@ int main() {
     testGetShouldReturnNull();
     testIndexedGetShouldReturnAModifiableReference();
     testChainedSet();
+    */
+/*
+    vector<int> V = { 1,2,3,4,7,8,9,10,11,12 };
+    sort(V.begin(), V.end());
+    cout << "Count >5: ";
+    std::vector<int>::iterator iter = std::find_if(V.begin(), V.end(), [](int i) {return i > 5; });
+    cout << V.size() - distance(V.begin(), iter);
+    */
+    testCounter();
     return 0;
 
 }
