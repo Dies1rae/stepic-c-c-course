@@ -103,7 +103,6 @@ void str::rep(const char* msg) {
 }
 
 
-
 void Assert(bool cond, const char* message) {
     if (!cond) {
         std::cout << message;
