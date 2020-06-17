@@ -4,6 +4,7 @@
 #pragma warning(disable : 4996)
 using namespace std;
 /*
+
 int a = 1;
 
 int f(int) { a = 2000; return a; };
@@ -24,7 +25,7 @@ int main()
     h();
     return 0;
 }
-*/
+
 class Point2D {
 private:
     int x;
@@ -51,9 +52,8 @@ Point2D::Point2D(const Point2D& p) {
     this->y = p.y;
     cout << "Copy constructor called for point(" << this->getX() << ", " << this->getY() << ")" << endl;
 }
-void f(Point2D p) {
-    
-}
+*/
+
 
 class str {
 private:
@@ -62,10 +62,15 @@ public:
     str();
     str(const char*);
     str(const str& s);
+    ~str();
     char* rep();
     void rep(const char* msg);
+    char* get();
+    char& get(const int);
+    void set(const int, const char);
+    //void set(const char* msg);
+    str& set(const char* msg);
 };
-
 str::str() {
     this->S = nullptr;
 }
@@ -77,8 +82,9 @@ str::str(const char* msg) {
     this->S[strlen(msg)] = '\0';
 }
 str::str(const str& s) {
-    if (&s == nullptr) {
+    if (s.S == nullptr) {
         this->S = nullptr;
+        return;
     }
     this->S = new char[strlen(s.S) + 1];
     for (int i = 0; i < strlen(s.S); i++) {
@@ -86,11 +92,13 @@ str::str(const str& s) {
     }
     this->S[strlen(s.S)] = '\0';
 }
+str::~str() {
+    delete this->S;
+}
 
 char* str::rep() {
     return this->S;
 }
-
 void str::rep(const char* msg) {
     if (this->S != nullptr) {
         delete(this->S);
@@ -102,7 +110,32 @@ void str::rep(const char* msg) {
     this->S[strlen(msg)] = '\0';
 }
 
+char* str::get() {
+    return this->S;
+}
+char& str::get(const int i) {
+    return this->S[i];
+}
 
+void str::set(const int i, const char CH) {
+    this->S[i] = CH;
+}
+/*
+void str::set(const char* msg) {
+    if (this->S != nullptr) {
+        delete(this->S);
+    }
+    this->S = new char[strlen(msg) + 1];
+    this->S = strdup(msg);
+}
+*/
+str& str::set(const char* msg){
+    if (this->S != nullptr) {
+        delete(this->S);
+    }
+    this->S = strdup(msg);
+    return *this;
+}
 void Assert(bool cond, const char* message) {
     if (!cond) {
         std::cout << message;
@@ -111,23 +144,33 @@ void Assert(bool cond, const char* message) {
         cout << "GOOD" << endl;
     }
 }
+void assert(bool expression, const char* context, const char* message) {
+    if (!expression) {
+        std::cout << "Assertion failed in [" << context << "]: " << message << std::endl;
+    }
+}
+void f(str s) { // copy constructor gets called
+    str s2 = s; // copy of copy is made
 
+    s.rep("another string");
+
+    Assert(0 == strcmp("This is my string", s2.rep()), "Copy constructor should make a copy of the content.");
+} //end of function, both copies get destroyed
+
+/*
 void test1() {
     str s = "This is my string";
     Assert(0 == strcmp("This is my string", s.rep()), "s representation error.");
 }
-
 void test2() {
     str s;
     Assert(nullptr == s.rep(), "s representation error.");
 }
-
 void test3() {
     str s = "This is a string";
     s.rep("This is MY string");
     Assert(0 == strcmp("This is MY string", s.rep()), "s representation error.");
 }
-
 void test4() {
 
     str s = "This is my string", s2 = s;
@@ -136,14 +179,143 @@ void test4() {
     Assert(0 == strcmp("This is my string", s2.rep()), "Copy constructor should make a copy of the content.");
 
 }
+*/
+/*
+void test1() {
+    str s = "This is my string";
+    Assert(0 == strcmp("This is my string", s.rep()), "(1) s representation error.");
+}
+void test2() {
+    str s;
+    Assert(nullptr == s.rep(), "(2) s representation error.");
+}
+void test3() {
+    str s = "This is a string";
+    str s2 = s;
+    Assert(0 == strcmp("This is a string", s2.rep()), "(3) s representation error.");
+}
+void test4() {
+    str s = "This is a string";
+    s.rep("This is MY string");
+    Assert(0 == strcmp("This is MY string", s.rep()), "(4) s representation error.");
+}
+void test5() {
+    str s = "This is a string";
+    str s2;
+    s2 = s;
+    Assert(0 == strcmp("This is a string", s2.rep()), "(5.1) s representation error.");
+    s.rep("String has changed");
+    Assert(0 == strcmp("String has changed", s.rep()), "(5.2) s representation error.");
+    Assert(0 == strcmp("This is a string", s2.rep()), "(5.3) s representation error.");
+}
+*/
+void testDefaultCtorShouldInitializeWithNull() {
+    str s;
+    assert(NULL == s.get(), "testDefaultCtorShouldInitializeWithNull", "internal representation error");
+}
+void testCtorShouldAllocateOwnMemory() {
+    char* test = new char[strlen("Test") + 1];
+    strcpy(test, "Test");
+
+    str s{ test };
+    assert(0 == strcmp(test, s.get()), "testCtorShouldAllocateOwnMemory", "internal representation error");
+
+    test[1] = 'E';
+    assert(0 == strcmp("TEst", test), "testCtorShouldAllocateOwnMemory", "shared memory error");
+    assert(0 == strcmp("Test", s.get()), "testCtorShouldAllocateOwnMemory", "shared memory error");
+
+    delete[] test;
+}
+void testCopyCtorShouldNotAlterSource() {
+    const char* test = "Test";
+    str s1{ test }, s2 = s1;
+    assert(0 == strcmp(test, s1.get()), "testCopyCtorShouldNotAlterSource", "internal representation error");
+    assert(0 == strcmp(test, s2.get()), "testCopyCtorShouldNotAlterSource", "internal representation error");
+}
+void testCopyCtorShouldDuplicateContent() {
+    const char* test = "Test";
+    str s1{ test }, s2 = s1;
+    assert(0 == strcmp(test, s1.get()), "testCopyCtorShouldDuplicateContent", "internal representation error");
+    assert(0 == strcmp(test, s2.get()), "testCopyCtorShouldDuplicateContent", "internal representation error");
+
+    s1.set(3, 'T');
+    assert(0 == strcmp("TesT", s1.get()), "testCopyCtorShouldDuplicateContent", "internal representation error");
+    assert(0 == strcmp(test, s2.get()), "testCopyCtorShouldDuplicateContent", "internal representation error");
+}
+void testCopyCtorShouldInitializeWithNullOnNullSource() {
+    str s1, s2 = s1;
+    assert(NULL == s1.get(), "testCopyCtorShouldInitializeWithNullOnNullSource", "11internal representation error");
+    assert(NULL == s2.get(), "testCopyCtorShouldInitializeWithNullOnNullSource", "internal representation error");
+}
+void testDestructorShouldNotFailOnNullString() {
+    str* pstr = new str;
+    delete pstr;
+    assert(true, "testDestructorShouldNotFailOnNullString", "destructor failed on NULL content");
+}
+void testDestructorShouldShouldFreeOwnMemory() {
+    const char* test = "Test";
+    str s1{ test };
+    str* pstr = new str{ s1 };
+    delete pstr;
+    assert(0 == strcmp(test, s1.get()), "testDestructorShouldShouldFreeOwnMemory", "memory deallocation failed");
+}
+void testSetShouldDuplicateContent() {
+    char* test = new char[strlen("Test") + 1];
+    strcpy(test, "Test");
+    str s1, s2;
+    assert(NULL == s1.get(), "testSetShouldDuplicateContent", "internal representation error");
+    assert(NULL == s2.get(), "testSetShouldDuplicateContent", "internal representation error");
+
+    s1.set(test);
+    assert(0 == strcmp("Test", test), "testSetShouldDuplicateContent", "internal representation error");
+    assert(0 == strcmp(test, s1.get()), "testSetShouldDuplicateContent", "internal representation error");
+
+    test[3] = 'T';
+    assert(0 == strcmp("TesT", test), "testSetShouldDuplicateContent", "internal representation error");
+    assert(0 == strcmp("Test", s1.get()), "testSetShouldDuplicateContent", "internal representation error");
+    delete test;
+}
+void testSetShoultNotAlterSource() {
+    const char* test = "Test";
+    str s1, s2;
+    assert(NULL == s1.get(), "testSetShoultNotAlterSource", "internal representation error");
+    assert(NULL == s2.get(), "testSetShoultNotAlterSource", "internal representation error");
+
+    s1.set(test);
+    assert(0 == strcmp("Test", test), "testSetShoultNotAlterSource", "internal representation error");
+    assert(0 == strcmp(test, s1.get()), "testSetShoultNotAlterSource", "internal representation error");
+}
+void testGetShouldReturnNull() {
+    assert(NULL == str{}.get(), "testGetShouldReturnNull", "internal representation error");
+}
+void testIndexedGetShouldReturnAModifiableReference() {
+    const char* test = "Test";
+    str s1{ test }, s2 = s1;
+    assert(0 == strcmp(test, s1.get()), "testIndexedGetShouldReturnAModifiableReference", "internal representation error");
+    assert(0 == strcmp(test, s2.get()), "testIndexedGetShouldReturnAModifiableReference", "internal representation error");
+
+    s1.get(3) = 'T';
+    assert(0 == strcmp("TesT", s1.get()), "testIndexedGetShouldReturnAModifiableReference", "internal representation error");
+    assert(0 == strcmp(test, s2.get()), "testIndexedGetShouldReturnAModifiableReference", "internal representation error");
+}
+void testChainedSet() {
+    str greet = "Hello";
+    assert(0 == strcmp("Hello", greet.get()), "testChainedSet", "internal representation error");
+
+    greet.set("Hi").set("Buna");
+    assert(0 == strcmp("Buna", greet.get()), "testChainedSet", "set failed");
+}
+
+
+
 
 int main() {
-    /*
+/*
     string str;
     getline(cin,str);
     cout << str<<endl;
     */
-    /*
+/*
     int x, y;
     std::cin >> x >> y;
     Point2D p1 = Point2D(x, y);
@@ -151,11 +323,35 @@ int main() {
     //cout << p1.getX() << " " << p1.getY() << endl;
     f(p2);
     */
-        
+/*
     test1();
     test2();
     test3();
     test4();
+    */
+/*
+    str s("A string"), s2 = s;
+    f(s);
+    */
+/*
+    test1();
+    test2();
+    test3();
+    test4();
+    test5();
+    */
+    testDefaultCtorShouldInitializeWithNull();
+    testCtorShouldAllocateOwnMemory();
+    testCopyCtorShouldNotAlterSource();
+    testCopyCtorShouldDuplicateContent();
+    testCopyCtorShouldInitializeWithNullOnNullSource();
+    testDestructorShouldNotFailOnNullString();
+    testDestructorShouldShouldFreeOwnMemory();
+    testSetShouldDuplicateContent();
+    testSetShoultNotAlterSource();
+    testGetShouldReturnNull();
+    testIndexedGetShouldReturnAModifiableReference();
+    testChainedSet();
     return 0;
 
 }

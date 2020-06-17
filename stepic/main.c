@@ -113,10 +113,6 @@ void removeDuplicates(char* S) {
     }
     removeDuplicates(S + 1);
 }
-void get_properties(int* array, int* min, int* max, int* num) {
-    int res = 1;
-    int length = 0;
-}
 void my_strrev(char* array) {
     int size = 0, ptr = 0;
     while (array[size] != '\0') {
@@ -169,9 +165,8 @@ void sort(struct person* array, int n) {
         }
     }
 }
-
+/*
 int main() {
-    /*
         int size = 0;
         int summ = 0;
         int mas[4];
@@ -192,20 +187,14 @@ int main() {
         else {
             printf("%d", 0);
         }
-    */
-    /*
         int res;
         res = getchar();
         printf("%d", res);
-    */
-    /*
         int num;
         scanf("%d", &num);
         char *eng[] = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten" };
         char *rom[] = { "zero", "unu", "doi", "trei", "patru", "cinci", "șase", "șapte", "opt", "nouă", "zece" };
         printf("%d\n%s\n%s", num, eng[num], rom[num]);
-    */
-    /*
         //a<b<c≤20
         int c, b, a = 1, ptr10 = 0;
         int arr[6][3];
@@ -239,8 +228,6 @@ int main() {
         for (int ptr0 = 0; ptr0 < 6; ptr0++) {
             printf("%d %d %d\n", arr[ptr0][0], arr[ptr0][1], arr[ptr0][2]);
         }
-    */
-    /*
         int num, ptr1, ptr2 = 0;
         scanf("%d", &num);
         ptr1 = num;
@@ -256,8 +243,6 @@ int main() {
         else {
             printf("%s", "false");
         }
-    */
-    /*
         int count = 0,n;
         scanf("%d", &n);
         while (!(n % 2)) {
@@ -279,8 +264,6 @@ int main() {
         if (n > 2){
             printf("%d %d\n", n, 1);
         }
-    */
-    /*
         char coffe[3][20];
         unsigned int A;
         int tmp;
@@ -347,8 +330,6 @@ int main() {
             }
         }
         printf("%s, %s, %s", coffe[0], coffe[1], coffe[2]);
-        */
-    /*
                 int n, i = 0, max = 0;
                 scanf("%d", &n);
                 while (n) {
@@ -361,14 +342,10 @@ int main() {
                     n--;
                 }
                 printf("%d", max);
-            */
-    /*
                     int a;
                     scanf("%d", &a);
                     convert(a);
                     printf("\n%d", res);
-                */
-    /*
                         int* arr;
                         int n, i = 0, found = 0;
                         scanf("%d",&n);
@@ -388,8 +365,6 @@ int main() {
                             }
                         }
                         printf("%d", -1);
-                    */
-    /*
                     int ptra = 0, h = 0, R = 0;
                     char str[129];
                     gets(str);
@@ -429,20 +404,14 @@ int main() {
                     for (int ptr = 0; ptr < strlen(str); ptr++) {
                         printf("%c %d\n", str[ptr], reps[ptr]);
                     }
-                */
-    /*
                 int arr[10] = { 1,5,10,22,100,0,-8,6,7,3 };
                 char str[] = "sky";
                 get_properties(arr, arr[6], arr[4], 10);
                 my_strrev(str);
                 printf("%s", str);
-                */
-    /*
                 char res[] = "TY";
                 char res1[] = "PIDOR";
                 printf("%s", concat(res, res1));
-             */
-    /*
              int main() {
                  int n;
                  scanf("%d", &n);
@@ -467,8 +436,6 @@ int main() {
                  printf("min:%d, max:%d, num:%d", min, max, num);
                  return 0;
              }
-             */
-
     char s[50];
     int age, i, n;
     struct person* p;
@@ -484,4 +451,4 @@ int main() {
     }
     return 0;
 }
-
+*/
