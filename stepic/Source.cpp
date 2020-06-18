@@ -106,7 +106,6 @@ str::~str() {
     delete this->S;
 }
 
-
 char* str::rep() {
     return this->S;
 }
@@ -168,8 +167,6 @@ void f(str s) { // copy constructor gets called
     Assert(0 == strcmp("This is my string", s2.rep()), "Copy constructor should make a copy of the content.");
 } //end of function, both copies get destroyed
 //------------------------------------
-
-
 /*
 void test1() {
     str s = "This is my string";
@@ -222,6 +219,7 @@ void test5() {
     Assert(0 == strcmp("This is a string", s2.rep()), "(5.3) s representation error.");
 }
 */
+/*
 void testDefaultCtorShouldInitializeWithNull() {
     str s;
     assert(NULL == s.get(), "testDefaultCtorShouldInitializeWithNull", "internal representation error");
@@ -318,67 +316,135 @@ void testChainedSet() {
     greet.set("Hi").set("Buna");
     assert(0 == strcmp("Buna", greet.get()), "testChainedSet", "set failed");
 }
-
-
 void testCounter() {
 
     str s1 = "This is test", s2, s3 = s1;
     Assert(3 == str::countInstances(), "Number of instances mismatch.");
 
 }
-int main() {
+*/
+/*
+struct C{
+    int c;
+    C(int i) {
+        this->c = i;
+        std::cout << "C::C(" << i << ")" << std::endl;
+    }
+    static C c0;
+    static void f(C c);
+};
+C C::c0 = 0;
+C c1 = 1;
+void C::f(C c){
+    C c2 = c.c;
+}
+*/
 /*
     string str;
     getline(cin,str);
     cout << str<<endl;
     */
 /*
-    int x, y;
-    std::cin >> x >> y;
-    Point2D p1 = Point2D(x, y);
-    Point2D p2 = p1;
-    //cout << p1.getX() << " " << p1.getY() << endl;
-    f(p2);
-    */
+        int x, y;
+        std::cin >> x >> y;
+        Point2D p1 = Point2D(x, y);
+        Point2D p2 = p1;
+        //cout << p1.getX() << " " << p1.getY() << endl;
+        f(p2);
+        */
 /*
-    test1();
-    test2();
-    test3();
-    test4();
-    */
+            test1();
+            test2();
+            test3();
+            test4();
+            */
 /*
-    str s("A string"), s2 = s;
-    f(s);
-    */
+                str s("A string"), s2 = s;
+                f(s);
+                */
 /*
-    test1();
-    test2();
-    test3();
-    test4();
-    test5();
-    */
+                    test1();
+                    test2();
+                    test3();
+                    test4();
+                    test5();
+                    */
 /*
-    testDefaultCtorShouldInitializeWithNull();
-    testCtorShouldAllocateOwnMemory();
-    testCopyCtorShouldNotAlterSource();
-    testCopyCtorShouldDuplicateContent();
-    testCopyCtorShouldInitializeWithNullOnNullSource();
-    testDestructorShouldNotFailOnNullString();
-    testDestructorShouldShouldFreeOwnMemory();
-    testSetShouldDuplicateContent();
-    testSetShoultNotAlterSource();
-    testGetShouldReturnNull();
-    testIndexedGetShouldReturnAModifiableReference();
-    testChainedSet();
-    */
+                        testDefaultCtorShouldInitializeWithNull();
+                        testCtorShouldAllocateOwnMemory();
+                        testCopyCtorShouldNotAlterSource();
+                        testCopyCtorShouldDuplicateContent();
+                        testCopyCtorShouldInitializeWithNullOnNullSource();
+                        testDestructorShouldNotFailOnNullString();
+                        testDestructorShouldShouldFreeOwnMemory();
+                        testSetShouldDuplicateContent();
+                        testSetShoultNotAlterSource();
+                        testGetShouldReturnNull();
+                        testIndexedGetShouldReturnAModifiableReference();
+                        testChainedSet();
+                        */
 /*
-    vector<int> V = { 1,2,3,4,7,8,9,10,11,12 };
-    sort(V.begin(), V.end());
-    cout << "Count >5: ";
-    std::vector<int>::iterator iter = std::find_if(V.begin(), V.end(), [](int i) {return i > 5; });
-    cout << V.size() - distance(V.begin(), iter);
-    */
-    testCounter();
-    return 0;
+                            vector<int> V = { 1,2,3,4,7,8,9,10,11,12 };
+                            sort(V.begin(), V.end());
+                            cout << "Count >5: ";
+                            std::vector<int>::iterator iter = std::find_if(V.begin(), V.end(), [](int i) {return i > 5; });
+                            cout << V.size() - distance(V.begin(), iter);
+                            */
 
+class Tree {
+    class Node {
+    public:
+        Node* right;
+        Node* left;
+        int value;
+        Node(int);
+        ~Node();
+    };
+    Node* root;
+public:
+    Tree();
+    void inorder() const;
+    void insert(int);
+};
+Tree::Tree() :root(NULL) {}
+Tree::Node::Node(int a){
+    this->value = a;
+    this->left = NULL;
+    this->right = NULL;
+}
+Tree::Node::~Node(){
+    delete right;
+    delete left;
+}
+// WRONG!~!!!!!
+void Tree::insert(int a) {
+    if (this->root == NULL) {
+        this->root = new Tree::Node(a);
+    }
+    else if (a < this->root->value && this->root->left == NULL) {
+        this->root->left = new Tree::Node(a);
+    }
+    else{
+        this->root->right = new Tree::Node(a);
+    }
+}
+// WRONG!~!!!!!
+void Tree::inorder()const {
+    if (this->root == NULL) {
+        return;
+    }
+    cout << this->root->left->value << " " << this->root->value << " " << this->root->right->value;
+}
+
+int main() {
+    Tree t;
+    int i, n;
+    cin >> n;
+    while (n > 0) {
+        cin >> i;
+        t.insert(i);
+        n--;
+    }
+    t.inorder();
+    return 0;
 }
