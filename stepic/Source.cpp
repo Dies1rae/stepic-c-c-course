@@ -55,9 +55,7 @@ Point2D::Point2D(const Point2D& p) {
     cout << "Copy constructor called for point(" << this->getX() << ", " << this->getY() << ")" << endl;
 }
 */
-
 //---------------
-
 class str {
 private:
     char* S;
@@ -105,7 +103,6 @@ str::str(const str& s) {
 str::~str() {
     delete this->S;
 }
-
 char* str::rep() {
     return this->S;
 }
@@ -119,14 +116,12 @@ void str::rep(const char* msg) {
     }
     this->S[strlen(msg)] = '\0';
 }
-
 char* str::get() {
     return this->S;
 }
 char& str::get(const int i) {
     return this->S[i];
 }
-
 void str::set(const int i, const char CH) {
     this->S[i] = CH;
 }
@@ -146,6 +141,7 @@ str& str::set(const char* msg){
     this->S = strdup(msg);
     return *this;
 }
+//---------
 void Assert(bool cond, const char* message) {
     if (!cond) {
         std::cout << message;
@@ -390,21 +386,41 @@ void C::f(C c){
                             std::vector<int>::iterator iter = std::find_if(V.begin(), V.end(), [](int i) {return i > 5; });
                             cout << V.size() - distance(V.begin(), iter);
                             */
-
+/*
+void test1() {
+    Picture p = "http://test.png";
+    Assert(0 == strcmp("http://test.png", p.url()), "(1) representation error.");
+}
+void test2() {
+    // The following line would yield a compilation error
+    // Picture p;
+}
+void test3() {
+    Picture p{ "c:\\localfile\\test.png" };
+    Picture p2{ p };
+    Assert(0 == strcmp("c:\\localfile\\test.png", p2.url()), "(2) representation error.");
+}
+*/
+//---------
 class Tree {
+public:
     class Node {
-    public:
         Node* right;
         Node* left;
         int value;
+    public:
         Node(int);
         ~Node();
+        int getval();
+        void insertN(int);
+        void printIN();
     };
+private:
     Node* root;
 public:
     Tree();
     void inorder() const;
-    void insert(int);
+    void insert(int a);
 };
 Tree::Tree() :root(NULL) {}
 Tree::Node::Node(int a){
@@ -412,31 +428,155 @@ Tree::Node::Node(int a){
     this->left = NULL;
     this->right = NULL;
 }
+void Tree::Node::insertN(int a) {
+    if(this->value > a) {
+        if (this->left != NULL) {
+            this->left->insertN(a);
+        }
+        else {
+            this->left = new Node(a);
+        }
+    }
+    else if (this->value < a) {
+        if (this->right != NULL) {
+            this->right->insertN(a);
+        }
+        else {
+            this->right = new Node(a);
+        }
+    }
+}
+void Tree::Node::printIN() {
+    if (this->left != NULL) {
+        this->left->printIN();
+    }
+    cout << this->value << ' ';
+    if(this->right != NULL) {
+        this->right->printIN();
+    }
+
+}
 Tree::Node::~Node(){
     delete right;
     delete left;
 }
-// WRONG!~!!!!!
+int Tree::Tree::Node::getval() {
+    return this->value;
+}
 void Tree::insert(int a) {
     if (this->root == NULL) {
-        this->root = new Tree::Node(a);
+        this->root = new Node(a);
     }
-    else if (a < this->root->value && this->root->left == NULL) {
-        this->root->left = new Tree::Node(a);
-    }
-    else{
-        this->root->right = new Tree::Node(a);
+    else {
+        root->insertN(a);
     }
 }
-// WRONG!~!!!!!
 void Tree::inorder()const {
     if (this->root == NULL) {
         return;
     }
-    cout << this->root->left->value << " " << this->root->value << " " << this->root->right->value;
+    else {
+        this->root->printIN();
+    }
+}
+//---------
+class Picture {
+private:
+    char* S;
+public:
+    Picture();
+    Picture(const char * msg);
+    Picture(const Picture& obj);
+    ~Picture();
+    char* url();
+};
+Picture::Picture() {
+    this->S = nullptr;
+}
+Picture::Picture(const char* msg) {
+    this->S = new char[strlen(msg) + 1];
+    for (int i = 0; i < strlen(msg); i++) {
+        this->S[i] = msg[i];
+    }
+    this->S[strlen(msg)] = '\0';
+}
+Picture::Picture(const Picture& obj) {
+    if (obj.S == nullptr) {
+        this->S = nullptr;
+        return;
+    }
+    this->S = new char[strlen(obj.S) + 1];
+    for (int i = 0; i < strlen(obj.S); i++) {
+        this->S[i] = obj.S[i];
+    }
+    this->S[strlen(obj.S)] = '\0';
+}
+Picture::~Picture() {
+    delete this->S;
+}
+char* Picture::url() {
+    return this->S;
+}
+//---------
+class Member {
+public:
+    class Date {
+    private:
+        int day;
+        int month;
+        int year;
+    public:
+        Date(int d, int m, int y);
+        Date(const Date& D);
+        ~Date();
+        int* getDate();
+        void setDate();
+        void printDate();
+    };
+private:
+    str name;
+    Date joinDate;
+    str phoneNumbre;
+    Picture pic;
+public:
+    static int ID() {
+        static int id = 0;
+        return id++;
+    }
+    Member();
+    Member(str N, str PH, Date D, str url);
+    void setPicture(str url);
+    void setDate(const Date& d);
+};
+Member::Date::Date(int d, int m, int y) {
+    this->day = d;
+    this->month = m;
+    this->year = y;
+}
+Member::Date::Date(const Date& D) {
+    this->day = D.day;
+    this->month = D.month;
+    this->year = D.year;
+}
+int* Member::Date::getDate() {
+    int* arr = (int*)malloc(3 * sizeof(int*));
+    arr[0] = this->day;
+    arr[1] = this->month;
+    arr[2] = this->year;
+    return arr;
+}
+
+
+Member::Member(str N, str PH, Date D, str url) {
+    this->ID();
+    this->joinDate = new Date(D.getDate()[0], D.getDate()[1], D.getDate()[2]);
+    this->name = N;
+    this->phoneNumbre = PH;
+    this->pic = url.rep();
 }
 
 int main() {
+    /*
     Tree t;
     int i, n;
     cin >> n;
@@ -446,5 +586,19 @@ int main() {
         n--;
     }
     t.inorder();
+    */
+    /*
+    test1();
+    test2();
+    test3();
+    */
+    str s{ "John" };
+    str ph{ "0700123456" };
+    str picUrl{ "http://example.com/pic.png" };
+    Member m(s, ph, Date(31, 3, 2020), picUrl), m2 = m;
+    m.setPicture(str("file:///home/user/pic.png"));
+    Picture p = m2.picture();
+    std::cout << p.url();
     return 0;
 }
+

@@ -5,32 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #pragma warning(disable:4996)
-
-struct node {
-    int val;
-    struct node* next;
-};
-
-struct list {
-    struct node* first;
-    struct node* last;
-    int size;
-};
-
-struct node* make_node(int v) {
-    struct node *r = (struct node*)malloc(sizeof(struct node));
-    r->val = v;
-    r->next = NULL;
-    return r;
-};
-
-struct list make_list() {
-    struct list res;
-    res.size = 0;
-    res.first = NULL;
-    res.last = NULL;
-    return res;
-};
+/*
 void append(struct list* l, int v) {
     if (l->first == NULL) {
         l->first = make_node(v);
@@ -51,28 +26,6 @@ void display(struct list l) {
         printf("%d ", tmp->val);
         tmp = tmp->next;
     } while (tmp != NULL);
-}
-void get_properties(int* array, int* min, int* max, int* num) {
-    int ptrsize, MIN, MAX;
-    ptrsize = 0;
-    MAX = 0;
-    while (array[ptrsize] != -987654) {
-        ptrsize++;
-    }
-    *num= ptrsize - 1;
-    for (int i = 0; i < ptrsize-1; i++) {
-        if (MAX < array[i]) {
-            MAX = array[i];
-        }
-    }
-    *max = MAX;
-    MIN = array[0];
-    for (int i = 0; i < ptrsize-1; i++) {
-        if (MIN > array[i]) {
-            MIN = array[i];
-        }
-    }
-    *min = MIN;
 }
 char* itob(int i) {
     static char bits[8] = { '0','0','0','0','0','0','0','0' };
@@ -165,8 +118,61 @@ void sort(struct person* array, int n) {
         }
     }
 }
+void get_properties(int* array, int* min, int* max, int* num) {
+    *min = array[0];
+    while (array[*num] != 0) {
+        (*num)++;
+    }
+    for (int i = 0; i < *num; i++) {
+        if (*max <= array[i]) {
+            *max = array[i];
+        }
+    }
+    for (int i = 0; i < *num; i++) {
+        if (*min >= array[i]) {
+            *min = array[i];
+        }
+    }
+}
+*/
+
+struct node {
+    int* val;
+    struct node* next;
+};
+struct list {
+    struct node* first;
+    struct node* last;
+    int size;
+};
+struct person {
+    int age;
+    char* name;
+};
+struct node* make_node(int v) {
+    struct node* r = (struct node*)malloc(sizeof(struct node));
+    r->val = v;
+    r->next = NULL;
+    return r;
+};
+struct list make_list() {
+    struct list res;
+    res.size = 0;
+    res.first = NULL;
+    res.last = NULL;
+    return res;
+};
+
+struct person make_person(char* s, int age) {
+    struct person A;
+    A.name = (char*)malloc(strlen(s) * sizeof(char));
+    strcpy(A.name, s);
+    A.age = age;
+    return A;
+}
 /*
 int main() {
+    /*
         int size = 0;
         int summ = 0;
         int mas[4];
@@ -449,6 +455,26 @@ int main() {
     for (int ptr = 0; ptr < n; ptr++) {
         printf("%s : %d\n", p[ptr].name, p[ptr].age);
     }
+    
+    int arr[8] = { 1,2,3,4,5,44,-257,0 };
+    int min = 0, max = 0, num = 0; 
+    int* ARR = &arr, M = &min, MX = &max, N = &num;
+    get_properties(ARR, M, MX, N);
+    printf("%d %d %d", min, max, num);
+    char s[50];
+    int age, i, n;
+    struct list l = make_list();
+    struct person p;
+    scanf("%d", &n);
+    for (i = 0; i < n; i++) {
+        scanf("%s", s);
+        scanf("%d", &age);
+        p = make_person(s, age);
+        append(&l, &p, copy_person);
+        p.name[0] = '\0';
+    }
+    display(l, display_person);
     return 0;
 }
+
 */
