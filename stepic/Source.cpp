@@ -487,6 +487,9 @@ public:
     Picture();
     Picture(const char * msg);
     Picture(const Picture& obj);
+    Picture(str obj);
+    void rep(const char* msg);
+    char* rep();
     ~Picture();
     char* url();
 };
@@ -511,6 +514,26 @@ Picture::Picture(const Picture& obj) {
     }
     this->S[strlen(obj.S)] = '\0';
 }
+Picture::Picture(str msg) {
+    this->S = new char[strlen(msg.get()) + 1];
+    for (int i = 0; i < strlen(msg.get()); i++) {
+        this->S[i] = msg.get()[i];
+    }
+    this->S[strlen(msg.get())] = '\0';
+}
+void Picture::rep(const char* msg) {
+    if (this->S != nullptr) {
+        delete(this->S);
+    }
+    this->S = new char[strlen(msg) + 1];
+    for (int i = 0; i < strlen(msg); i++) {
+        this->S[i] = msg[i];
+    }
+    this->S[strlen(msg)] = '\0';
+}
+char* Picture::rep() {
+    return this->S;
+}
 Picture::~Picture() {
     delete this->S;
 }
@@ -522,59 +545,70 @@ class Member {
 public:
     class Date {
     private:
-        int day;
-        int month;
-        int year;
+        int DAY;
+        int MONTH;
+        int YEAR;
     public:
-        Date(int d, int m, int y);
-        Date(const Date& D);
-        ~Date();
-        int* getDate();
-        void setDate();
-        void printDate();
+        Date() {
+            this->DAY = NULL;
+            this->MONTH = NULL;
+            this->YEAR = NULL;
+        }
+        Date(int d, int m, int y) {
+            this->DAY = d;
+            this->MONTH = m;
+            this->YEAR = y;
+        }
+        void setDate(int d, int m, int y) {
+            this->DAY = d;
+            this->MONTH = m;
+            this->YEAR = y;
+        }
+        int* getDate() {
+            int* arr;
+            arr = (int*)malloc(3 * sizeof(int));
+            arr[0] = this->DAY;
+            arr[1] = this->MONTH;
+            arr[2] = this->YEAR;
+            return arr;
+        }
+        ~Date() {}
     };
 private:
-    str name;
-    Date joinDate;
-    str phoneNumbre;
-    Picture pic;
-public:
-    static int ID() {
-        static int id = 0;
-        return id++;
+    static int Id() {
+        static int ctr = 0;
+        return ++ctr;
     }
-    Member();
-    Member(str N, str PH, Date D, str url);
-    void setPicture(str url);
-    void setDate(const Date& d);
+    int ID;
+    str Name;
+    str phoneNumber;
+    Date joinDate;
+    Picture PIC;
+public:
+    Member(str N, str PhN, Member::Date JD, str url) {
+        this->ID = Id();
+        this->Name.rep(N.get());
+        this->phoneNumber.rep(PhN.get());
+        this->joinDate.setDate(JD.getDate()[0], JD.getDate()[1], JD.getDate()[2]);
+        this->PIC.rep(url.get());
+    }
+    int getID() {
+        return this->ID;
+    }
+    void printMEMall() {
+        cout << this->ID << ":" << this->Name.get() << ":" << this->phoneNumber.get() << ":" << this->PIC.rep() << ":" << this->joinDate.getDate()[0] << "//" << this->joinDate.getDate()[1] << "//" << this->joinDate.getDate()[2] << endl;
+    }
+    void setPicture(str nURL) {
+        this->PIC.rep(nURL.get());
+    }
+    char* picture() {
+        return this->PIC.rep();
+    }
 };
-Member::Date::Date(int d, int m, int y) {
-    this->day = d;
-    this->month = m;
-    this->year = y;
+Member::Date Date(int d, int m, int y) {
+    Member::Date A(d,m,y);
+    return A;
 }
-Member::Date::Date(const Date& D) {
-    this->day = D.day;
-    this->month = D.month;
-    this->year = D.year;
-}
-int* Member::Date::getDate() {
-    int* arr = (int*)malloc(3 * sizeof(int*));
-    arr[0] = this->day;
-    arr[1] = this->month;
-    arr[2] = this->year;
-    return arr;
-}
-
-
-Member::Member(str N, str PH, Date D, str url) {
-    this->ID();
-    this->joinDate = new Date(D.getDate()[0], D.getDate()[1], D.getDate()[2]);
-    this->name = N;
-    this->phoneNumbre = PH;
-    this->pic = url.rep();
-}
-
 int main() {
     /*
     Tree t;
