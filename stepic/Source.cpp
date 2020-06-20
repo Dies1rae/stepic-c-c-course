@@ -480,7 +480,16 @@ void Tree::inorder()const {
     }
 }
 //---------
-class Picture {
+class Account {
+public:
+    Account() {}
+    void describe();
+};
+void Account::describe() {
+    std::cout << "I'm Account::describe()" << std::endl;
+}
+//----------
+class Picture:Account {
 private:
     char* S;
 public:
@@ -492,8 +501,11 @@ public:
     char* rep();
     ~Picture();
     char* url();
+    void describe() {
+        std::cout << "I'm Picture::describe()" << std::endl;
+    }
 };
-Picture::Picture() {
+Picture::Picture(){
     this->S = nullptr;
 }
 Picture::Picture(const char* msg) {
@@ -541,7 +553,7 @@ char* Picture::url() {
     return this->S;
 }
 //---------
-class Member {
+class Member :Account {
 public:
     class Date {
     private:
@@ -585,6 +597,7 @@ private:
     Date joinDate;
     Picture PIC;
 public:
+    Member(){}
     Member(str N, str PhN, Member::Date JD, str url) {
         this->ID = Id();
         this->Name.rep(N.get());
@@ -617,15 +630,16 @@ public:
         res[LEN] += '\0';
         return res;
     }
+    void describe() {
+        std::cout << "I'm Member::describe()" << std::endl;
+    }
 };
 Member::Date Date(int d, int m, int y) {
     Member::Date A(d,m,y);
     return A;
 }
 //---------
-
-
-class Group {
+class Group :Account {
 public:
     class Date {
     private:
@@ -670,6 +684,7 @@ private:
     Picture PIC;
     vector<Member> MEM;
 public:
+    Group() { }
     Group(str N, str D, Member::Date JD, str url) {
         this->ID = Id();
         this->Name.rep(N.get());
@@ -695,7 +710,21 @@ public:
         Member tmp = M;
         tmp.printMEMall();
     }
+    void describe() {
+        std::cout << "I'm Group::describe()" << std::endl;
+    }
 };
+
+void test(){
+    Account a;
+    a.describe();
+
+    Member m;
+    m.describe();
+
+    Group g;
+    g.describe();
+}
 
 int main() {
     /*
@@ -708,12 +737,12 @@ int main() {
         n--;
     }
     t.inorder();
-    */
-    /*
+   
+    
     test1();
     test2();
     test3();
-    */
+    
     str s{ "John" };
     str ph{ "0700123456" };
     str picUrl{ "http://example.com/pic.png" };
@@ -726,7 +755,10 @@ int main() {
     g.showMEM(m);
     g.showMEM(m2);
     g.removeMember(m);
-;
+*/
+
+    test();
+
     return 0;
 }
 
