@@ -604,11 +604,99 @@ public:
     char* picture() {
         return this->PIC.rep();
     }
+    char* getNameandPhN() {
+        char* res;
+        int LEN = strlen(this->Name.get()) + strlen(this->phoneNumber.get()) + 1;
+        res = (char*)malloc(LEN * sizeof(char));
+        for (int ptr = 0; ptr < strlen(this->Name.get()); ptr++) {
+            res[ptr] = this->Name.get()[ptr];
+        }
+        for (int ptr = strlen(this->Name.get()); ptr < LEN; ptr++) {
+            res[ptr] = this->phoneNumber.get()[ptr];
+        }
+        res[LEN] += '\0';
+        return res;
+    }
 };
 Member::Date Date(int d, int m, int y) {
     Member::Date A(d,m,y);
     return A;
 }
+//---------
+
+
+class Group {
+public:
+    class Date {
+    private:
+        int DAY;
+        int MONTH;
+        int YEAR;
+    public:
+        Date() {
+            this->DAY = NULL;
+            this->MONTH = NULL;
+            this->YEAR = NULL;
+        }
+        Date(int d, int m, int y) {
+            this->DAY = d;
+            this->MONTH = m;
+            this->YEAR = y;
+        }
+        void setDate(int d, int m, int y) {
+            this->DAY = d;
+            this->MONTH = m;
+            this->YEAR = y;
+        }
+        int* getDate() {
+            int* arr;
+            arr = (int*)malloc(3 * sizeof(int));
+            arr[0] = this->DAY;
+            arr[1] = this->MONTH;
+            arr[2] = this->YEAR;
+            return arr;
+        }
+        ~Date() {}
+    };
+private:
+    static int Id() {
+        static int ctr = 0;
+        return ++ctr;
+    }
+    int ID;
+    str Name;
+    str Description;
+    Date joinDate;
+    Picture PIC;
+    vector<Member> MEM;
+public:
+    Group(str N, str D, Member::Date JD, str url) {
+        this->ID = Id();
+        this->Name.rep(N.get());
+        this->Description.rep(D.get());
+        this->joinDate.setDate(JD.getDate()[0], JD.getDate()[1], JD.getDate()[2]);
+        this->PIC.rep(url.get());
+        this->MEM;
+    }
+    void addMember(const Member& M) {
+        this->MEM.push_back(M);
+    }
+    void removeMember(const Member& M) {
+        Member tmp = M;
+        int tmpptr = 0;
+        for (int ptr = 0; ptr < this->MEM.size(); ptr++) {
+            if (strcmp(this->MEM[ptr].getNameandPhN(), tmp.getNameandPhN()) == 0) {
+                tmpptr = ptr;
+            }
+        }
+        this->MEM.erase(this->MEM.begin() + tmpptr);
+    }
+    void showMEM(const Member M) {
+        Member tmp = M;
+        tmp.printMEMall();
+    }
+};
+
 int main() {
     /*
     Tree t;
@@ -632,7 +720,13 @@ int main() {
     Member m(s, ph, Date(31, 3, 2020), picUrl), m2 = m;
     m.setPicture(str("file:///home/user/pic.png"));
     Picture p = m2.picture();
-    std::cout << p.url();
+    Group g(str("Group 1"), str("a description"), Date(2, 4, 2020), str("file:///home/user/groupPic.png"));
+    g.addMember(m);
+    g.addMember(m2);
+    g.showMEM(m);
+    g.showMEM(m2);
+    g.removeMember(m);
+;
     return 0;
 }
 
