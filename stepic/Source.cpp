@@ -482,14 +482,22 @@ void Tree::inorder()const {
 //---------
 class Account {
 public:
-    Account() {}
-    void describe();
+    Account() { }
+    virtual void describe() {
+        std::cout << "I'm Account::describe()" << std::endl;
+    }
+    virtual int getId() {
+        return 0;
+    }
+    virtual char *  getName() {
+        char* res = (char*)malloc(15 * sizeof(char));
+        strcpy_s(res,15,"Abstract fnctn\0");
+        return res;
+    }
 };
-void Account::describe() {
-    std::cout << "I'm Account::describe()" << std::endl;
-}
+
 //----------
-class Picture:Account {
+class Picture: public Account {
 private:
     char* S;
 public:
@@ -501,7 +509,7 @@ public:
     char* rep();
     ~Picture();
     char* url();
-    void describe() {
+    void describe() override{
         std::cout << "I'm Picture::describe()" << std::endl;
     }
 };
@@ -553,7 +561,7 @@ char* Picture::url() {
     return this->S;
 }
 //---------
-class Member :Account {
+class Member : public Account {
 public:
     class Date {
     private:
@@ -630,8 +638,15 @@ public:
         res[LEN] += '\0';
         return res;
     }
-    void describe() {
+    void describe() override {
+        Account::Account::describe();
         std::cout << "I'm Member::describe()" << std::endl;
+    }
+    int getId() override {
+        return this->ID;
+    }
+    char* getName() override {
+        return this->Name.get();
     }
 };
 Member::Date Date(int d, int m, int y) {
@@ -639,7 +654,7 @@ Member::Date Date(int d, int m, int y) {
     return A;
 }
 //---------
-class Group :Account {
+class Group : public Account {
 public:
     class Date {
     private:
@@ -674,7 +689,7 @@ public:
     };
 private:
     static int Id() {
-        static int ctr = 0;
+        static int ctr = 1;
         return ++ctr;
     }
     int ID;
@@ -710,8 +725,15 @@ public:
         Member tmp = M;
         tmp.printMEMall();
     }
-    void describe() {
+    void describe() override {
+        Account::Account::describe();
         std::cout << "I'm Group::describe()" << std::endl;
+    }
+    int getId() override {
+        return this->ID;
+    }
+    char * getName() override {
+        return this->Name.get();
     }
 };
 
@@ -756,8 +778,26 @@ int main() {
     g.showMEM(m2);
     g.removeMember(m);
 */
+    /*
+    Account* pa = new Account;
+    Account* pm = new Member;
+    Account* pg = new Group;
 
-    test();
+    pa->describe();
+    pm->describe();
+    pg->describe();
+    */
+    str s{ "John" };
+    str ph{ "0700123456" };
+    str picUrl{ "http://example.com/pic.png" };
+    Account* m = new Member(s, ph, Date(31, 3, 2020), picUrl);
+    
+    std::cout << m->getId() << " " << m->getName() << "\n";
+
+    Account* g = new Group(str("Group 1"), str("a description"), Date(2, 4, 2020), str("file:///home/user/groupPic.png"));
+    std::cout << g->getId() << " " << g->getName() << "\n";
+    delete m;
+    delete g;
 
     return 0;
 }
