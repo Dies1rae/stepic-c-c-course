@@ -3,8 +3,10 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
+#define complexi complex<int>
 #pragma warning(disable : 4996)
 using namespace std;
+
 /*
 
 int a = 1;
@@ -155,6 +157,7 @@ void assert(bool expression, const char* context, const char* message) {
         std::cout << "Assertion failed in [" << context << "]: " << message << std::endl;
     }
 }
+/*
 void f(str s) { // copy constructor gets called
     str s2 = s; // copy of copy is made
 
@@ -162,6 +165,7 @@ void f(str s) { // copy constructor gets called
 
     Assert(0 == strcmp("This is my string", s2.rep()), "Copy constructor should make a copy of the content.");
 } //end of function, both copies get destroyed
+*/
 //------------------------------------
 /*
 void test1() {
@@ -401,6 +405,57 @@ void test3() {
     Assert(0 == strcmp("c:\\localfile\\test.png", p2.url()), "(2) representation error.");
 }
 */
+/*
+Tree t;
+int i, n;
+cin >> n;
+while (n > 0) {
+    cin >> i;
+    t.insert(i);
+    n--;
+}
+t.inorder();
+
+
+test1();
+test2();
+test3();
+
+str s{ "John" };
+str ph{ "0700123456" };
+str picUrl{ "http://example.com/pic.png" };
+Member m(s, ph, Date(31, 3, 2020), picUrl), m2 = m;
+m.setPicture(str("file:///home/user/pic.png"));
+Picture p = m2.picture();
+Group g(str("Group 1"), str("a description"), Date(2, 4, 2020), str("file:///home/user/groupPic.png"));
+g.addMember(m);
+g.addMember(m2);
+g.showMEM(m);
+g.showMEM(m2);
+g.removeMember(m);
+*/
+/*
+Account* pa = new Account;
+Account* pm = new Member;
+Account* pg = new Group;
+
+pa->describe();
+pm->describe();
+pg->describe();
+*/
+/*
+  str s{ "John" };
+  str ph{ "0700123456" };
+  str picUrl{ "http://example.com/pic.png" };
+  Account* m = new Member(s, ph, Date(31, 3, 2020), picUrl);
+
+  std::cout << m->getId() << " " << m->getName() << "\n";
+
+  Account* g = new Group(str("Group 1"), str("a description"), Date(2, 4, 2020), str("file:///home/user/groupPic.png"));
+  std::cout << g->getId() << " " << g->getName() << "\n";
+  delete m;
+  delete g;
+  */
 //---------
 class Tree {
 public:
@@ -495,7 +550,6 @@ public:
         return res;
     }
 };
-
 //----------
 class Picture: public Account {
 private:
@@ -736,7 +790,7 @@ public:
         return this->Name.get();
     }
 };
-
+//---------
 void test(){
     Account a;
     a.describe();
@@ -747,58 +801,116 @@ void test(){
     Group g;
     g.describe();
 }
+//---------
+template <class T> class complex {
+private:
+    T R;
+    T I;
+public:
+    complex() : R(0.0), I(0.0) {};
+    complex(T r) : R(r), I(0.0) {};
+    complex(T r, T i) : R(r), I(i) {};
+    complex(const complex<T>& c):R(c.R), I(c.I) {};
+    T real() {
+        return this->R;
+    }
+    T imag() {
+        return this->I;
+    }
+    complex<T> add(const complex<T>& c) {
+        complex<T> tmpres(this->R+c.R, this->I+c.I);
+        return tmpres;
+    }
+    complex<T> add(T r) {
+        complex<T> tmpres(this->R + r, this->I);
+        return tmpres;
+    }
+    void setReal(T r) {
+        this->R = r;
+    }
+    void setImag(T i) {
+        this->I = i;
+    }
+    T getReal() {
+        return this->R;
+    }
+    T getImag() {
+        return this->I;
+    }
+};
+template <class T, class S>
+complex<T> cast(complex<S> s) {
+    complex<T> res;
+    res.setReal(s.getReal());
+    res.setImag(s.getImag());
+    return res;
+}
+
+//---------
+/*
+void testComplexClass1() {
+    complexi c{ 1, 2 };
+
+    Assert(c.real() == 1, "Real part mismatch");
+    Assert(c.imag() == 2, "Imag part mismatch");
+}
+void testComplexClass2() {
+    complexi c1{ 1, 2 }, c2{ 2, 3 };
+
+    Assert(c1.add(c2).real() == 3, "Addition: real part mismatch");
+    Assert(c1.real() == 1, "Addition: operand has been modified");
+    Assert(c2.add(c1).imag() == 5, "Addition: imag part mismatch");
+    Assert(c2.real() == 2, "Addition: operand has been modified");
+}
+void testComplexClass3() {
+    complexi c{ 1, 2 };
+
+    Assert(c.add(2).real() == 3, "Scalar addition: real part mismatch");
+    Assert(c.add(2).imag() == 2, "Scalar addition: imag part mismatch");
+    Assert(c.real() == 1, "Scalar addition:operand has been changed");
+    Assert(c.imag() == 2, "Scalar addition:operand has been changed");
+}
+void testComplexClass4() {
+    complexi c1, c2{ 2 }, c3{ 3,4 }, c4{ 0, 1 }, c5 = c2;
+
+    Assert(c1.real() == 0 && c1.imag() == 0, "c1 mis-initialized.");
+    Assert(c2.real() == 2 && c2.imag() == 0, "c2 mis-initialized.");
+    Assert(c3.real() == 3 && c3.imag() == 4, "c3 mis-initialized.");
+    Assert(c4.real() == 0 && c4.imag() == 1, "c4 mis-initialized.");
+    Assert(c5.real() == 2 && c5.imag() == 0, "c5 mis-initialized.");
+}
+void f(complexi c) {
+    //std::cout << "Aha... copy ctor has been called." << std::endl;
+    c.setReal(-1);
+}
+void g(complexi& c) {
+    //std::cout << "Oohoo.. no ctor has been called." << std::endl;
+    c.setReal(-1);
+}
+void testComplexClass5() {
+    complexi c{ 3, 4 };
+    f(c);
+    Assert(c.real() == 3 && c.imag() == 4, "c has been modified.");
+    g(c);
+    Assert(c.real() == -1 && c.imag() == 4, "c not been modified.");
+}
+void testComplexClass6() {
+    complex<double> c{ 3.5, 4.5 };
+    Assert(c.real() == 3.5 && c.imag() == 4.5, "Real / imag part mismatch.");
+}
+*/
+void testTemplateConstructor() {
+    complex<float> cf{ 1.0f, 2.0f };
+    complex<double> cd = cast<double,float>(cf);
+    //complex<double> cd = cf;
+
+    Assert(cf.real() == cd.real(), "Real parts are different.");
+    Assert(cf.imag() == cd.imag(), "Imaginary parts are different.");
+}
+
 
 int main() {
-    /*
-    Tree t;
-    int i, n;
-    cin >> n;
-    while (n > 0) {
-        cin >> i;
-        t.insert(i);
-        n--;
-    }
-    t.inorder();
-   
-    
-    test1();
-    test2();
-    test3();
-    
-    str s{ "John" };
-    str ph{ "0700123456" };
-    str picUrl{ "http://example.com/pic.png" };
-    Member m(s, ph, Date(31, 3, 2020), picUrl), m2 = m;
-    m.setPicture(str("file:///home/user/pic.png"));
-    Picture p = m2.picture();
-    Group g(str("Group 1"), str("a description"), Date(2, 4, 2020), str("file:///home/user/groupPic.png"));
-    g.addMember(m);
-    g.addMember(m2);
-    g.showMEM(m);
-    g.showMEM(m2);
-    g.removeMember(m);
-*/
-    /*
-    Account* pa = new Account;
-    Account* pm = new Member;
-    Account* pg = new Group;
-
-    pa->describe();
-    pm->describe();
-    pg->describe();
-    */
-    str s{ "John" };
-    str ph{ "0700123456" };
-    str picUrl{ "http://example.com/pic.png" };
-    Account* m = new Member(s, ph, Date(31, 3, 2020), picUrl);
-    
-    std::cout << m->getId() << " " << m->getName() << "\n";
-
-    Account* g = new Group(str("Group 1"), str("a description"), Date(2, 4, 2020), str("file:///home/user/groupPic.png"));
-    std::cout << g->getId() << " " << g->getName() << "\n";
-    delete m;
-    delete g;
-
+    testTemplateConstructor();
     return 0;
 }
 
