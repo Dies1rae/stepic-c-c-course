@@ -845,7 +845,33 @@ complex<T> cast(complex<S> s) {
     res.setImag(s.getImag());
     return res;
 }
-
+template <>
+class complex<double> {
+private:
+    double Re;
+    double Im;
+public:
+    constexpr complex(): Re(0.0), Im(0.0) {};
+    complex(complex<float>& c):Re(c.getReal()), Im(c.getImag()) {};
+    void setReal(double r) {
+        this->Re = r;
+    }
+    void setImag(double i) {
+        this->Im = i;
+    }
+    void setReal(float r) {
+        this->Re = r;
+    }
+    void setImag(float i) {
+        this->Im = i;
+    }
+    double real() {
+        return this->Re;
+    }
+    double imag() {
+        return this->Im;
+    }
+};
 //---------
 /*
 void testComplexClass1() {
@@ -902,7 +928,7 @@ void testComplexClass6() {
 void testTemplateConstructor() {
     complex<float> cf{ 1.0f, 2.0f };
     complex<double> cd = cast<double,float>(cf);
-    //complex<double> cd = cf;
+    complex<double> cd = cf;
 
     Assert(cf.real() == cd.real(), "Real parts are different.");
     Assert(cf.imag() == cd.imag(), "Imaginary parts are different.");
