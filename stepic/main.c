@@ -162,7 +162,6 @@ struct list make_list() {
     res.last = NULL;
     return res;
 };
-
 struct person make_person(char* s, int age) {
     struct person A;
     A.name = (char*)malloc(strlen(s) * sizeof(char));
@@ -170,7 +169,26 @@ struct person make_person(char* s, int age) {
     A.age = age;
     return A;
 }
-/*
+
+struct node* make_node(void* v, void* (*pfun)(void*)) {
+
+}
+
+void append(struct list* l, void* v, void* (*pfun)(void*)) {
+
+}
+
+void display(struct list l, void (*pfun)(void*)) {
+
+}
+
+void* copy_person(void* p) {
+
+}
+
+void display_person(void* p) {
+
+}
 int main() {
     /*
         int size = 0;
@@ -461,6 +479,7 @@ int main() {
     int* ARR = &arr, M = &min, MX = &max, N = &num;
     get_properties(ARR, M, MX, N);
     printf("%d %d %d", min, max, num);
+    */
     char s[50];
     int age, i, n;
     struct list l = make_list();
@@ -474,7 +493,7 @@ int main() {
         p.name[0] = '\0';
     }
     display(l, display_person);
+    
     return 0;
 }
 
-*/

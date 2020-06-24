@@ -3,6 +3,9 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
+#include <list>
+#include <iterator>
+#include <numeric>
 #define complexi complex<int>
 #pragma warning(disable : 4996)
 using namespace std;
@@ -927,16 +930,52 @@ void testComplexClass6() {
 */
 void testTemplateConstructor() {
     complex<float> cf{ 1.0f, 2.0f };
-    complex<double> cd = cast<double,float>(cf);
+    //complex<double> cd = cast<double,float>(cf);
     complex<double> cd = cf;
 
     Assert(cf.real() == cd.real(), "Real parts are different.");
     Assert(cf.imag() == cd.imag(), "Imaginary parts are different.");
 }
+void testWithIterator() {
+    int values[] = { 10, 20, 30, 40, 50 };
+    list<int> l{ values, values + 5 };
+    int sum = 0;
+    for (auto ptr : l) {
+        sum += ptr;
+    }
+   
+    Assert(150 == sum, "Error computing sum");
+}
+template<class C> typename C::value_type sum(const C& c) {
+    typename C::value_type res = 0;
+    for (typename C::value_type ptr : c) {
+        res += ptr;
+    }
+    return res;
+}
+void testWithTemplateFunction() {
+    int values[] = { 10, 20, 30, 40, 50 };
+    list<int> l{ values, values + 5 };
 
-
+    Assert(150 == sum(l), "Error computing sum");
+}
+void testWithAccumulate() {
+    int values[] = { 10, 20, 30, 40, 50 };
+    list<int> l{ values, values + 5 };
+    cout << std::accumulate(l.begin(), l.end(), 0) << endl;
+    Assert(150 == std::accumulate(l.begin(), l.end(), 0), "Error computing sum");
+}
+void testWithLambdaFunction() {
+    int values[] = { 10, 20, 30, 40, 50 };
+    list<int> l{ values, values + 5 };
+   
+    int lambdaExpr(0);
+    for_each(l.begin(), l.end(), [&](int n) {lambdaExpr += n; });
+    Assert(150 == lambdaExpr, "Error computing sum");
+}
+/*
 int main() {
-    testTemplateConstructor();
+    testWithLambdaFunction();
     return 0;
 }
-
+*/
