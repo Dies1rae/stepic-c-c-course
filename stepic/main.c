@@ -169,25 +169,22 @@ struct person make_person(char* s, int age) {
     A.age = age;
     return A;
 }
-
-struct node* make_node(void* v, void* (*pfun)(void*)) {
-
-}
-
-void append(struct list* l, void* v, void* (*pfun)(void*)) {
-
-}
-
-void display(struct list l, void (*pfun)(void*)) {
-
-}
-
-void* copy_person(void* p) {
-
-}
-
-void display_person(void* p) {
-
+int res = 0;
+void convert(int n) {
+    int binaryNum[32];
+    int i = 0;
+    while (n > 0) {
+        binaryNum[i] = n % 2;
+        n = n / 2;
+        i++;
+    }
+    for (int j = i - 1; j >= 0; j--) {
+        res += binaryNum[j];
+        res *= 10;
+        if (j == 1) {
+            return;
+        }
+    }
 }
 int main() {
     /*
@@ -480,20 +477,10 @@ int main() {
     get_properties(ARR, M, MX, N);
     printf("%d %d %d", min, max, num);
     */
-    char s[50];
-    int age, i, n;
-    struct list l = make_list();
-    struct person p;
-    scanf("%d", &n);
-    for (i = 0; i < n; i++) {
-        scanf("%s", s);
-        scanf("%d", &age);
-        p = make_person(s, age);
-        append(&l, &p, copy_person);
-        p.name[0] = '\0';
-    }
-    display(l, display_person);
-    
+    int a;
+    scanf("%d", &a);
+    convert(a);
+    printf("%d", res);
     return 0;
 }
 
